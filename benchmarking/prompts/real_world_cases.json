@@ -1,0 +1,76 @@
+{
+  "version": "1.0",
+  "description": "Real-world UI clone benchmarks for testing info-driven-ui compliance in React.",
+  "cases": [
+    {
+      "id": "airbnb-clone",
+      "name": "Airbnb Property Listings & Booking Panel",
+      "prompt": "Create a React component clone of Airbnb's listing browser. It must include a grid of property cards showing thumbnail slideshows, average review scores, relative distances, available dates, and price per night. Next to it, include a collapsible booking summary sidebar that dynamically calculates taxes, cleanings fees, and service charges, aligning numeric breakdown columns and using tabular numerals for the totals.",
+      "target_directory": "benchmarking/products/airbnb-clone",
+      "required_rules": ["01-semantic-color", "02-numeric-alignment", "05-table-as-last-resort", "08-empty-state-required", "09-tabular-nums"]
+    },
+    {
+      "id": "spotify-dashboard",
+      "name": "Spotify Player & Queue Controller",
+      "prompt": "Create a React component for a Spotify-style web player dashboard. It must show a main track details view, interactive queue list with track durations, drag-and-drop sortable handles, status badges showing download states (Downloaded, Streaming, Offline), and hover actions for adding to playlists or saving tracks. Make sure to use tooltips on all icon-only control buttons (Play, Pause, Skip, Repeat) and format time elapsed vs duration properly.",
+      "target_directory": "benchmarking/products/spotify-dashboard",
+      "required_rules": ["03-tooltip-coverage", "04-destructive-actions", "06-status-badge-not-text", "09-tabular-nums"]
+    },
+    {
+      "id": "uber-dispatch",
+      "name": "Uber Driver Dispatch & Live Map View",
+      "prompt": "Create a React dashboard component for an Uber-style driver dispatch operator. It needs a sidebar listing online drivers, their trip statuses (Idle, En Route, On Trip), current coordinate distances, and earnings. It must handle real-time simulation updates, show a pulsing 'Live Connected' indicator, display map coordinates, and include a clear, non-shifting 'Active Ride Dispatched' toast/banner when new orders are accepted.",
+      "target_directory": "benchmarking/products/uber-dispatch",
+      "required_rules": ["01-semantic-color", "02-numeric-alignment", "06-status-badge-not-text", "08-empty-state-required"]
+    },
+    {
+      "id": "linear-board",
+      "name": "Linear Issue Tracker & Kanban Board",
+      "prompt": "Create a React clone of a Linear-style issue tracker board. It must feature columns grouped by issue status (Backlog, Todo, In Progress, Done, Canceled), issue cards displaying priority levels with distinct semantic colors (Low, Medium, High, Urgent), and inline tags. Drag-and-drop interactions between status columns should be designed with realistic dragging states, outline rings, and keyboard navigation shortcuts for focusing cards.",
+      "target_directory": "benchmarking/products/linear-board",
+      "required_rules": ["01-semantic-color", "03-tooltip-coverage", "04-destructive-actions", "06-status-badge-not-text", "08-empty-state-required"]
+    },
+    {
+      "id": "figma-layers",
+      "name": "Figma Sidebar Layers & Design Tree Navigator",
+      "prompt": "Create a React clone of the Figma sidebar layers panel. It needs to render a collapsible tree hierarchy of frames, groups, vectors, and text layers. It must implement indented nested items with expand/collapse chevrons, icons indicating layer type, hover action controls (toggle visibility eye icon, lock icon), and proper focus outlines for keyboard navigation through the hierarchy tree.",
+      "target_directory": "benchmarking/products/figma-layers",
+      "required_rules": ["03-tooltip-coverage", "05-table-as-last-resort", "08-empty-state-required"]
+    },
+    {
+      "id": "stripe-billing",
+      "name": "Stripe Billing Dashboard & Ledger Table",
+      "prompt": "Create a React clone of a Stripe billing dashboard ledger. It must show critical KPI cards for Monthly Recurring Revenue (MRR), Active Subscriptions, and Churn Rate with comparative sparkline trend lines. Below, display a dense transaction table with columns for Customer email, Invoice amount, Status (Paid, Pending, Failed), relative timestamp, and actions. Destructive actions (Refund) must be hidden inside a hover dropdown menu, and numerical currencies must be right-aligned with tabular-nums.",
+      "target_directory": "benchmarking/products/stripe-billing",
+      "required_rules": ["01-semantic-color", "02-numeric-alignment", "03-tooltip-coverage", "04-destructive-actions", "06-status-badge-not-text", "07-skeleton-not-spinner", "09-tabular-nums"]
+    },
+    {
+      "id": "notion-database",
+      "name": "Notion-style Database Table & View Toggle",
+      "prompt": "Create a React component replicating a Notion database page. It must render a table showing custom properties: Title, Tags, Status, Budget, Date, and Created By. It must feature view toggles (Table vs Board), a column sorting action, right-aligned monetary values, relative timestamps that show the full date on hover, and an expandable detail view panel that appears when a row is clicked.",
+      "target_directory": "benchmarking/products/notion-database",
+      "required_rules": ["02-numeric-alignment", "03-tooltip-coverage", "05-table-as-last-resort", "06-status-badge-not-text", "09-tabular-nums"]
+    },
+    {
+      "id": "vercel-deployments",
+      "name": "Vercel Deployment Pipeline & Build Log Feed",
+      "prompt": "Create a React clone of a Vercel project deployment tab. It must show a list of active deployments with branch names, commit hashes, building states (Queued, Building, Ready, Error), and relative deployment timestamps. Clicking a deployment must reveal a chronological, scrollable build log stream (vertical timeline format). Ensure the active log feed implements proper loading skeletons, relative timestamps with absolute date tooltips, and toast warnings on build failures.",
+      "target_directory": "benchmarking/products/vercel-deployments",
+      "required_rules": ["01-semantic-color", "03-tooltip-coverage", "06-status-badge-not-text", "07-skeleton-not-spinner", "10-chronological-timeline"]
+    },
+    {
+      "id": "datadog-metrics",
+      "name": "Datadog Latency Monitoring & KPI Grid",
+      "prompt": "Create a React monitoring panel clone in the style of Datadog. It must render a grid of system telemetry metrics (P95 Latency, P99 Latency, Request Rate, Error Count). The latency values must be right-aligned tabular numerals with explicit millisecond units. The column headers must include tooltips explaining each percentile metric, and the overall dashboard must render skeleton mock charts when fetching metrics.",
+      "target_directory": "benchmarking/products/datadog-metrics",
+      "required_rules": ["02-numeric-alignment", "03-tooltip-coverage", "07-skeleton-not-spinner", "09-tabular-nums"]
+    },
+    {
+      "id": "slack-channels",
+      "name": "Slack Chat Feed & Active Presence Cursors",
+      "prompt": "Create a React UI clone of a Slack channel interface. It needs to show a vertical chronological feed of chat messages grouped by sender, relative message timestamps (with absolute dates in tooltips), and reaction badges. In the channel list, show member presence status indicators (Online, Away, Do Not Disturb) and list-hover action shortcuts (reply thread, star message, copy link).",
+      "target_directory": "benchmarking/products/slack-channels",
+      "required_rules": ["03-tooltip-coverage", "06-status-badge-not-text", "10-chronological-timeline"]
+    }
+  ]
+}
