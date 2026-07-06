@@ -8,6 +8,10 @@ description: >
   structure and asks for a UI. The core principle: information has a nature, and that nature
   must drive every component decision. Do NOT build UI by instinct — follow this skill's
   8-step Decision Framework before writing a single component.
+version: "2.0.0"
+compatibility: [react, vue, svelte, angular, tailwind-v4]
+license: "MIT"
+user-invocable: true
 ---
 
 # info-driven-ui
@@ -21,6 +25,22 @@ data *means*, what the user needs to *do* with it, and what visual form *serves*
 
 ---
 
+## Key Patterns (Cheat-Sheet)
+
+Always enforce these 10 atomic rule checkers during generation:
+1. **[Semantic Color](file:///home/azrxl/info-driven-ui/rules/01-semantic-color.md):** Colors must carry meaning, not decoration.
+2. **[Numeric Alignment](file:///home/azrxl/info-driven-ui/rules/02-numeric-alignment.md):** Right-align numeric columns for vertical digit placement.
+3. **[Tooltip Coverage](file:///home/azrxl/info-driven-ui/rules/03-tooltip-coverage.md):** Mandatory tooltips for icon-onlys, abbreviations, and relative timestamps.
+4. **[Destructive Actions](file:///home/azrxl/info-driven-ui/rules/04-destructive-actions.md):** Hidden inside hover-gated overflow menus, never permanently visible.
+5. **[Table Last Resort](file:///home/azrxl/info-driven-ui/rules/05-table-as-last-resort.md):** Choose tables only for multi-attribute card-heavy/timeline comparisons.
+6. **[Status Badges](file:///home/azrxl/info-driven-ui/rules/06-status-badge-not-text.md):** Represent states as colored badges, never plain text.
+7. **[Skeletons vs Spinners](file:///home/azrxl/info-driven-ui/rules/07-skeleton-not-spinner.md):** Skeleton screens for layout loading; spinners only for async buttons.
+8. **[Empty States](file:///home/azrxl/info-driven-ui/rules/08-empty-state-required.md):** Designed empty/no-results states with illustrations and CTAs.
+9. **[Tabular Numerals](file:///home/azrxl/info-driven-ui/rules/09-tabular-nums.md):** Explicitly style numeric outputs with `tabular-nums`.
+10. **[Chronological Form](file:///home/azrxl/info-driven-ui/rules/10-chronological-timeline.md):** Use timelines and feeds for events instead of date-sorted tables.
+
+---
+
 ## Reference Files
 
 Load these on demand. Do not load all at once.
@@ -31,6 +51,7 @@ Load these on demand. Do not load all at once.
 | `references/component-engine.md` | Deciding which component to use for a given data pattern |
 | `references/progressive-disclosure.md` | Designing information hierarchy and action visibility |
 | `references/invisible-ui.md` | Designing states, microinteractions, and implicit affordances |
+| `references/advanced-patterns.md` | Solving complex data gaps (real-time, dark mode themes, i18n, command palette) |
 | `references/review-checklist.md` | Self-auditing a UI before delivering it |
 
 Stack-specific component references (load when the user's stack is identified):

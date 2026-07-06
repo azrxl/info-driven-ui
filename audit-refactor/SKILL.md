@@ -37,6 +37,7 @@ Load these from the parent skill's `references/` directory:
 | `../references/component-engine.md` | Checking if the current component matches the data's nature |
 | `../references/progressive-disclosure.md` | Auditing information hierarchy and action placement |
 | `../references/invisible-ui.md` | Checking for missing states and microinteractions |
+| `../references/advanced-patterns.md` | Auditing complex features (dark mode, real-time, i18n, command palette) |
 | `../references/review-checklist.md` | The audit instrument itself — this IS the audit checklist |
 
 If a stack is identified, also load the relevant `../stacks/<stack>/STACK.md` for
