@@ -46,7 +46,23 @@ idiomatic refactor patterns in that framework.
 
 ## The Audit Framework
 
-**This is mandatory. Execute all 6 steps before producing findings or a refactor.**
+**This is mandatory. Execute all 7 steps before producing findings or a refactor.**
+
+### STEP 0 — Run Deterministic Linter (if source code is available)
+
+If the user's source code is accessible via a file path, run the deterministic linter
+first to establish a factual baseline:
+
+```bash
+python scripts/audit_linter.py <path> --json
+```
+
+The linter detects anti-patterns with regex (not judgment) — its findings are **facts**.
+Use them as a starting point: the LLM interprets context, filters false positives,
+and adds domain-specific recommendations. See `scripts/README.md` for check details.
+
+If source code is only available as pasted snippets in the chat (no file path),
+skip this step and proceed directly to STEP 1.
 
 ### STEP 1 — Inventory Current Representation
 
