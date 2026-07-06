@@ -1,0 +1,211 @@
+{
+  "version": "2.0",
+  "description": "Evaluation test suite for info-driven-ui and info-driven-ui-audit-refactor skills.",
+  "cases": [
+    {
+      "id": "trigger-001",
+      "category": "triggering",
+      "input": "Make me a table that shows all current system alerts, including severity, alert message, date triggered, and system node.",
+      "expected_behavior": "Should trigger info-driven-ui skill. Since data is alert events, it must identify if the order of events makes it a timeline candidate (Kole Jain Rule), or use badges for severity/status.",
+      "assertions": [
+        "Loads references/data-semantics.md",
+        "Applies Step 2 (Classify Nature of Data Points)",
+        "Recommends Badge/Chip for 'severity'",
+        "Evaluates date triggered for relative format + absolute tooltip"
+      ]
+    },
+    {
+      "id": "trigger-002",
+      "category": "triggering",
+      "input": "We have an API returning users. The fields are id, email, fullName, role, lastLoginAt, totalLogins. Design a UI for this.",
+      "expected_behavior": "Should trigger info-driven-ui. The agent should run through the 8-step decision framework.",
+      "assertions": [
+        "Identifies 'role' as a Category (Badge/Chip)",
+        "Identifies 'totalLogins' as a Quantity (Right-aligned, tabular-nums)",
+        "Identifies 'lastLoginAt' as Time (Relative format + ISO tooltip)"
+      ]
+    },
+    {
+      "id": "trigger-003",
+      "category": "triggering",
+      "input": "Write a quicksort algorithm in TypeScript.",
+      "expected_behavior": "Should NOT trigger info-driven-ui. This is a generic algorithmic task, not a user interface design task.",
+      "assertions": [
+        "Does not invoke info-driven-ui decision framework"
+      ]
+    },
+    {
+      "id": "trigger-004",
+      "category": "triggering",
+      "input": "Review this React component: it's a transactions list. Customers are complaining they don't know what status icons mean and delete transactions accidentally.",
+      "expected_behavior": "Should trigger info-driven-ui-audit-refactor. The agent should identify it as an audit request.",
+      "assertions": [
+        "Loads audit-refactor/SKILL.md",
+        "Executes Step 0 (Runs deterministic linter if code provided) or Step 1",
+        "Flags missing tooltips on status icons as Major/Minor finding",
+        "Flags permanently visible delete actions as Critical finding"
+      ]
+    },
+    {
+      "id": "trigger-005",
+      "category": "triggering",
+      "input": "Our billing dashboard is very slow. Can you show me how to paginate or virtualize a 10,000 row table?",
+      "expected_behavior": "Should trigger info-driven-ui. The agent should load progressive disclosure and advanced patterns.",
+      "assertions": [
+        "Loads references/progressive-disclosure.md or references/advanced-patterns.md",
+        "Recommends virtual scrolling or cursor-based pagination for large datasets"
+      ]
+    },
+    {
+      "id": "classify-001",
+      "category": "classification",
+      "input": "Dataset: Server metrics. Fields: cpuUsagePercentage (float), status (string: active/error/offline), ipAddress (string), lastPingTimestamp (unix timestamp).",
+      "expected_behavior": "Should classify the fields into semantic types precisely.",
+      "assertions": [
+        "Classifies cpuUsagePercentage as Quantity (Right-aligned, tabular-nums)",
+        "Classifies status as State/Status (Badge with green/red/gray mapping)",
+        "Classifies lastPingTimestamp as Temporal/Time (Relative time + absolute date tooltip)"
+      ]
+    },
+    {
+      "id": "classify-002",
+      "category": "classification",
+      "input": "Dataset: Task management. Fields: title, priority (low, medium, high), completionRatio (0.0 to 1.0), createdDate.",
+      "expected_behavior": "Should classify the fields and pick the proper components.",
+      "assertions": [
+        "Classifies priority as Category/Status (badge or icons)",
+        "Classifies completionRatio as Progress (progress bar or radial progress)"
+      ]
+    },
+    {
+      "id": "classify-003",
+      "category": "classification",
+      "input": "Dataset: Git repository commits. Fields: sha (string), authorName (string), message (text), committedAt (datetime).",
+      "expected_behavior": "Should classify Git commits as a chronological dataset.",
+      "assertions": [
+        "Classifies committedAt and message as Chronological Data",
+        "Applies the Kole Jain Rule and recommends a vertical timeline/activity feed over a flat table"
+      ]
+    },
+    {
+      "id": "classify-004",
+      "category": "classification",
+      "input": "Dataset: E-commerce pricing. Fields: planName, priceMonth (integer cents), featuresList (array of strings). There are only 3 subscription tiers.",
+      "expected_behavior": "Should choose the correct dominant form for small cardinality.",
+      "assertions": [
+        "Identifies low cardinality (3 items)",
+        "Rejects table representation; recommends a Card Grid (pricing cards) instead"
+      ]
+    },
+    {
+      "id": "classify-005",
+      "category": "classification",
+      "input": "Dataset: Infrastructure regions. Fields: regionCode (us-east-1, eu-west-1), latencyMs (int), nodeCount (int).",
+      "expected_behavior": "Should identify geographic/network semantics.",
+      "assertions": [
+        "Classifies regionCode as geographic/location data",
+        "Recommends map visualization or region highlighting if mapping is primary, otherwise filter selector feeding a list"
+      ]
+    },
+    {
+      "id": "enforce-001",
+      "category": "rule-enforcement",
+      "input": "Build a React component displaying transaction amounts: $4500, $20, $1200000. Stack is React + Tailwind.",
+      "expected_behavior": "Must align numbers correctly and format them properly.",
+      "assertions": [
+        "Uses 'text-right' Tailwind utility class for alignment",
+        "Uses 'tabular-nums' or 'font-mono' for equal digit widths",
+        "Formats large numbers with separators (e.g. 1,200,000 or 1.2M with full amount tooltip)"
+      ]
+    },
+    {
+      "id": "enforce-002",
+      "category": "rule-enforcement",
+      "input": "Implement row actions for a table row representing a server. Actions: Restart, Configure, Delete. Stack is Svelte 5.",
+      "expected_behavior": "Must hide destructive actions and show secondary actions on hover.",
+      "assertions": [
+        "Destructive action 'Delete' is hidden inside an overflow menu or hover-gated group",
+        "Secondary actions appear using opacity-0 group-hover:opacity-100 or Svelte equivalent"
+      ]
+    },
+    {
+      "id": "enforce-003",
+      "category": "rule-enforcement",
+      "input": "Generate a status column for an order status: completed, processing, failed. Stack is Vue 3.",
+      "expected_behavior": "Must output badge components, never plain text.",
+      "assertions": [
+        "Uses a Badge or Chip component rather than bare text inside <td>",
+        "Assigns green to completed, amber/yellow to processing, and red to failed"
+      ]
+    },
+    {
+      "id": "enforce-004",
+      "category": "rule-enforcement",
+      "input": "Design a table header for a column displaying 'P99 Latency'.",
+      "expected_behavior": "Must require a tooltip explaining the latency metric.",
+      "assertions": [
+        "Wraps 'P99 Latency' or its info trigger in a Tooltip",
+        "Tooltip content defines '99th percentile response time'"
+      ]
+    },
+    {
+      "id": "enforce-005",
+      "category": "rule-enforcement",
+      "input": "Generate a loading indicator for a dashboard overview page displaying multiple complex charts and tables.",
+      "expected_behavior": "Must output skeleton loaders matching the target layout.",
+      "assertions": [
+        "Uses Skeleton panels/loaders rather than a single full-page spinner"
+      ]
+    },
+    {
+      "id": "audit-001",
+      "category": "audit-accuracy",
+      "input": "Audit this React snippet:\n```tsx\nexport function UsersTable({ users }) {\n  return (\n    <table>\n      <thead>\n        <tr><th>Name</th><th>Email</th><th>Actions</th></tr>\n      </thead>\n      <tbody>\n        {users.map(u => (\n          <tr>\n            <td>{u.name}</td>\n            <td>{u.email}</td>\n            <td><button onClick={() => deleteUser(u.id)}>Delete</button></td>\n          </tr>\n        ))}\n      </tbody>\n    </table>\n  );\n}\n```",
+      "expected_behavior": "Should run audit flow and detect missing states, missing tooltips, and permanently visible destructive action.",
+      "assertions": [
+        "Identifies permanently visible Delete button as a Critical violation",
+        "Identifies absence of loading skeleton or empty states as a Major violation",
+        "Recommends hover-gated dropdown or confirmation step for delete"
+      ]
+    },
+    {
+      "id": "audit-002",
+      "category": "audit-accuracy",
+      "input": "Audit this component: an icon-only button without labels or title.",
+      "expected_behavior": "Should flag the icon button.",
+      "assertions": [
+        "Identifies missing tooltip on icon-only button as a Major/Minor finding (Rule 03)"
+      ]
+    },
+    {
+      "id": "audit-003",
+      "category": "audit-accuracy",
+      "input": "Audit this table snippet displaying currency data:\n```tsx\n<td>{row.price}</td>\n```",
+      "expected_behavior": "Should flag alignment and formatting.",
+      "assertions": [
+        "Identifies left-aligned currency text as a Major violation (Rule 02)",
+        "Identifies lack of locale formatting and currency symbols as a Major violation (Rule 02)"
+      ]
+    },
+    {
+      "id": "audit-004",
+      "category": "audit-accuracy",
+      "input": "Audit this event logging code where alerts are sorted by timestamp inside a table with 3 columns.",
+      "expected_behavior": "Should suggest changing table representation to a timeline.",
+      "assertions": [
+        "Flags sorted-timestamp table for chronological event data as a Major finding",
+        "Recommends vertical timeline or activity feed (Rule 10)"
+      ]
+    },
+    {
+      "id": "audit-005",
+      "category": "audit-accuracy",
+      "input": "Audit this view displaying category badges where colors are assigned dynamically by array indices: `bg-[colors[index % 5]]`.",
+      "expected_behavior": "Should flag decorative/non-semantic color rotations.",
+      "assertions": [
+        "Flags decorative color allocation as a Minor finding",
+        "Recommends static semantic mapping: same category = same color (Rule 01)"
+      ]
+    }
+  ]
+}
