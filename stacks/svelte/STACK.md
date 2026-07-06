@@ -165,3 +165,230 @@ description: >
   }
 </script>
 ```
+
+## Complete Reference Component: Svelte 5 + shadcn-svelte Table
+
+A complete implementation in Svelte 5 with `$props()` runes and Melt UI / Bits UI primitives via shadcn-svelte.
+
+```svelte
+<!-- InvoiceTable.svelte -->
+<script lang="ts">
+  import { Badge } from "$lib/components/ui/badge"
+  import { Button } from "$lib/components/ui/button"
+  import { Skeleton } from "$lib/components/ui/skeleton"
+  import * as Tooltip from "$lib/components/ui/tooltip"
+  import * as DropdownMenu from "$lib/components/ui/dropdown-menu"
+  import { toast } from "svelte-sonner"
+  import { 
+    Archive, MoreHorizontal, AlertCircle, Inbox, Search, RefreshCw 
+  } from "lucide-svelte"
+
+  export interface Invoice {
+    id: string
+    customer: string
+    amount: number
+    status: "paid" | "pending" | "overdue"
+    date: string // ISO string
+  }
+
+  let { 
+    isLoading = false, 
+    error = null, 
+    data = null, 
+    onRetry, 
+    onDelete 
+  } = $props<{
+    isLoading: boolean
+    error: Error | null
+    data: Invoice[] | null
+    onRetry: () => void
+    onDelete: (id: string) => Promise<void>
+  }>()
+
+  let filterQuery = $state("")
+
+  const filteredData = $derived(
+    data ? data.filter(inv => inv.customer.toLowerCase().includes(filterQuery.toLowerCase())) : []
+  )
+
+  const statusConfig = {
+    paid: { label: "Paid", className: "bg-green-500/15 text-green-700 hover:bg-green-500/15 border-green-500/20" },
+    pending: { label: "Pending", className: "bg-amber-500/15 text-amber-700 hover:bg-amber-500/15 border-amber-500/20" },
+    overdue: { label: "Overdue", className: "bg-red-500/15 text-red-700 hover:bg-red-500/15 border-red-500/20" }
+  } as const
+
+  const formatRelativeTime = (isoString: string) => {
+    const date = new Date(isoString)
+    const now = new Date()
+    const diffTime = Math.abs(now.getTime() - date.getTime())
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    if (diffDays === 1) return "Today"
+    if (diffDays === 2) return "Yesterday"
+    return `${diffDays} days ago`
+  }
+</script>
+
+<div class="space-y-4">
+  <!-- Search -->
+  <div class="relative max-w-sm">
+    <Search class="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+    <input
+      bind:value={filterQuery}
+      placeholder="Filter by customer..."
+      class="pl-9 h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+    />
+  </div>
+
+  {#if isLoading}
+    <!-- 1. Loading State -->
+    <div class="rounded-md border">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b text-left text-muted-foreground">
+            <th class="py-2 px-3">Customer</th>
+            <th class="py-2 px-3">Status</th>
+            <th class="py-2 px-3 text-right">Amount</th>
+            <th class="py-2 px-3 text-right">Date</th>
+            <th class="w-[80px]"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each Array(5) as _, i}
+            <tr class="border-b">
+              <td class="py-2 px-3"><Skeleton class="h-4 w-32" /></td>
+              <td class="py-2 px-3"><Skeleton class="h-5 w-16 rounded-full" /></td>
+              <td class="py-2 px-3"><Skeleton class="h-4 w-20 ml-auto" /></td>
+              <td class="py-2 px-3"><Skeleton class="h-4 w-24 ml-auto" /></td>
+              <td class="py-2 px-3"><Skeleton class="h-8 w-8 rounded-md" /></td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
+  {:else if error}
+    <!-- 2. Error State -->
+    <div class="flex flex-col items-center justify-center rounded-lg border border-red-100 bg-red-50/50 p-8 text-center">
+      <AlertCircle class="h-8 w-8 text-red-600 mb-3" />
+      <h3 class="font-semibold text-red-900">Failed to load invoices</h3>
+      <p class="text-sm text-red-700 mt-1 mb-4">{error.message || "A network error occurred."}</p>
+      <Button variant="outline" size="sm" onclick={onRetry} class="border-red-200 hover:bg-red-50">
+        <RefreshCw class="h-4 w-4 mr-2" /> Retry Load
+      </Button>
+    </div>
+  {:else if !data || data.length === 0}
+    <!-- 3. Empty State -->
+    <div class="flex flex-col items-center justify-center py-16 text-center border rounded-lg">
+      <div class="rounded-full bg-muted p-4 mb-4">
+        <Inbox class="h-8 w-8 text-muted-foreground" />
+      </div>
+      <h3 class="text-lg font-semibold mb-1">No invoices found</h3>
+      <p class="text-sm text-muted-foreground mb-4 max-w-sm">
+        Generate your first invoice to bill clients and receive payments.
+      </p>
+      <Button>Create Invoice</Button>
+    </div>
+  {:else if filteredData.length === 0}
+    <!-- 4. No-Results State -->
+    <div class="flex flex-col items-center justify-center py-12 text-center border rounded-lg">
+      <Search class="h-8 w-8 text-muted-foreground mb-3" />
+      <h3 class="font-semibold mb-1">No matching invoices</h3>
+      <p class="text-sm text-muted-foreground mb-4">
+        No customer matches "{filterQuery}". Try adjusting your search query.
+      </p>
+      <Button variant="outline" size="sm" onclick={() => filterQuery = ""}>
+        Clear Filter
+      </Button>
+    </div>
+  {:else}
+    <div class="rounded-md border">
+      <Tooltip.Provider delayDuration={200}>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b text-left text-muted-foreground">
+              <th class="py-2 px-3">Customer</th>
+              <th class="py-2 px-3">
+                <Tooltip.Root>
+                  <Tooltip.Trigger asChild let:builder>
+                    <span use:builder.action {...builder} class="cursor-help border-b border-dotted border-muted-foreground">Status</span>
+                  </Tooltip.Trigger>
+                  <Tooltip.Content>The current collection phase of the invoice</Tooltip.Content>
+                </Tooltip.Root>
+              </th>
+              <th class="py-2 px-3 text-right">Amount</th>
+              <th class="py-2 px-3 text-right">Date</th>
+              <th class="w-[80px]"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each filteredData as invoice (invoice.id)}
+              <tr class="group border-b hover:bg-muted/50">
+                <td class="py-2 px-3 font-medium">{invoice.customer}</td>
+                <td class="py-2 px-3">
+                  <Badge class={statusConfig[invoice.status].className}>
+                    {invoice.status.toUpperCase()}
+                  </Badge>
+                </td>
+                <td class="py-2 px-3 text-right font-mono tabular-nums">
+                  ${invoice.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </td>
+                <td class="py-2 px-3 text-right text-muted-foreground">
+                  <Tooltip.Root>
+                    <Tooltip.Trigger asChild let:builder>
+                      <time use:builder.action {...builder} class="cursor-help">{formatRelativeTime(invoice.date)}</time>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>{new Date(invoice.date).toLocaleString()}</Tooltip.Content>
+                  </Tooltip.Root>
+                </td>
+                <td class="py-2 px-3">
+                  <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Tooltip.Root>
+                      <Tooltip.Trigger asChild let:builder>
+                        <Button builders={[builder]} variant="ghost" size="icon" class="h-8 w-8">
+                          <Archive class="h-4 w-4" />
+                          <span class="sr-only">Archive</span>
+                        </Button>
+                      </Tooltip.Trigger>
+                      <Tooltip.Content>Archive invoice records</Tooltip.Content>
+                    </Tooltip.Root>
+
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger asChild let:builder>
+                        <Button builders={[builder]} variant="ghost" size="icon" class="h-8 w-8">
+                          <MoreHorizontal class="h-4 w-4" />
+                          <span class="sr-only">Actions</span>
+                        </Button>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Content align="end">
+                        <DropdownMenu.Item>Download PDF</DropdownMenu.Item>
+                        <DropdownMenu.Item>Send Reminder</DropdownMenu.Item>
+                        <DropdownMenu.Separator />
+                        <DropdownMenu.Item 
+                          class="text-destructive focus:bg-destructive/15 focus:text-destructive cursor-pointer"
+                          onclick={() => {
+                            onDelete(invoice.id)
+                            toast.success("Invoice deleted", {
+                              action: {
+                                label: "Undo",
+                                onClick: () => {}
+                              },
+                              duration: 5000
+                            })
+                          }}
+                        >
+                          Delete
+                        </DropdownMenu.Item>
+                      </DropdownMenu.Content>
+                    </DropdownMenu.Root>
+                  </div>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </Tooltip.Provider>
+    </div>
+  {/if}
+</div>
+```
+
+```
