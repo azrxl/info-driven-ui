@@ -37,12 +37,26 @@ Stack-specific component references (load when the user's stack is identified):
 
 | Directory | Load when |
 |---|---|
-| `stacks/react-shadcn-tailwind/` | Stack is React + shadcn/ui + Tailwind |
-| `stacks/react-tailwind/` | Stack is React + Tailwind (no shadcn) |
-| `stacks/vue/` | Stack is Vue |
+| `stacks/react-shadcn-tailwind/STACK.md` | Stack is React + shadcn/ui + Tailwind |
+| `stacks/react-tailwind/STACK.md` | Stack is React + Tailwind (no shadcn, Radix primitives) |
+| `stacks/vue/STACK.md` | Stack is Vue 3 + Reka UI |
+| `stacks/svelte/STACK.md` | Stack is Svelte 5 + shadcn-svelte |
+| `stacks/angular/STACK.md` | Stack is Angular + Angular Material |
 | *(more stacks added over time)* | |
 
 > If no stack is specified, apply principles only. Do not assume a stack.
+> Each `STACK.md` follows the same template — Badge, Table, Tooltip, Empty State,
+> Skeleton, Row Hover Actions, KPI Card, Toast — so the same principle maps
+> predictably to any framework.
+
+---
+
+## Related Sub-Skill: Auditing Existing UIs
+
+This skill covers **generation from scratch**. To review, critique, or refactor an
+**existing** UI, use the sibling skill at `audit-refactor/SKILL.md` instead. It applies
+the same reference files in reverse — starting from what exists and identifying gaps
+against this standard, rather than building from a blank state.
 
 ---
 
